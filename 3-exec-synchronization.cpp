@@ -25,7 +25,7 @@ int main(){
         printf("hello-world %d of %d\n", tid, num);
     } // Implicit barrier here
 
-    printf("Part 3 any thread does the job\n");
+    printf("Part 3 any thread can do the job\n");
     num = 0, tid = 0;
     #pragma omp parallel private(tid) // Default is shared when declared outside parallel region
     {
@@ -49,4 +49,9 @@ int main(){
             num = omp_get_num_threads();
         printf("hello-world %d of %d\n", tid, num);
     } // Implicit barrier here
+
+    // Unless you use the threadprivate clause, the only important difference between single,
+    // nowait and master is that if you have multiple master blocks in a parallel section, you
+    // are guaranteed that they are executed by the same thread every time, and hence, the values 
+    // of private (thread-local) variables are the same.
 }

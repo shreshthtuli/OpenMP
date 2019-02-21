@@ -1,6 +1,8 @@
 #include <omp.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <iostream>
+#include <string>
 
 int main(){
 
@@ -51,4 +53,31 @@ int main(){
         printf("hello-world tid = %d, %x of %x\n", tid, &tid, &num);
     } // Implicit barrier here
 
+    printf("This example explicitly specifies that a is private (each thread has their own copy of it) and that b is shared (each thread accesses the same variable).\n");
+    int a, b=0;
+    #pragma omp parallel for private(a) shared(b)
+    for(a=0; a<50; ++a)
+    {
+        #pragma omp atomic  // Does this operation atomically
+        b += a;
+    }
+    printf("b = %d\n", b);
+
+    // Note that a private copy is an uninitialized variable
+    // by the same name and same type as the original variable
+    std::string c = "x", d = "x", e = "x";
+    int f = 3;
+    
+    // firstprivate copies values from already used
+    #pragma omp parallel private(c) firstprivate(d) shared(e) num_threads(2)
+    {
+        c += "k";
+        d += "k";
+        e += "k";
+        f += 7;
+        std::cout << "c becomes (" << c << "), d is (" << d << "), e is (" << e << ")\n";
+    }
+    // The lastprivate clause defines a variable private as in firstprivate or private,
+    // but causes the value from the last task to be copied back to the original value after
+    // the end of the loop/sections construct.
 }
