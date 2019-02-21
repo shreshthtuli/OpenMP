@@ -98,4 +98,7 @@ int main(){
     // default (default(shared)).
 
     // #pragma omp for collapse(2) can collapse nested loops to expose parallelism
+
+    // #pragma omp for ordered with #pragma omp ordered{} used to make sure that the ordered
+    // block of code runs in the specified loop order only
 }
