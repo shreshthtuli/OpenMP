@@ -54,4 +54,6 @@ int main(){
     // nowait and master is that if you have multiple master blocks in a parallel section, you
     // are guaranteed that they are executed by the same thread every time, and hence, the values 
     // of private (thread-local) variables are the same.
+
+    // single with copyprivate(<var name>) broadcasts thread private var value to others
 }

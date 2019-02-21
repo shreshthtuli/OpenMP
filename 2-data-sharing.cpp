@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+int tvar;
+
 int main(){
 
     
@@ -80,4 +82,25 @@ int main(){
     // The lastprivate clause defines a variable private as in firstprivate or private,
     // but causes the value from the last task to be copied back to the original value after
     // the end of the loop/sections construct.
+
+    #pragma omp threadprivate (tvar)
+    int numt;
+    tvar = 11;
+    printf("From MASTER: A(tid) = %x \n", &tid);
+    #pragma omp parallel shared (numt) private(tid) //copyin(tvar)
+    {
+        tid = omp_get_thread_num();
+        numt = omp_get_num_threads();
+        printf("hello world %d of %d: tvar = %d, A(tvar) = %x \n", tid, numt, +
+        +tvar, &tvar);
+    }
+
+    printf("From MASTER: A(tid) = %x \n", &tid);
+    #pragma omp parallel shared (numt) private(tid) copyin(tvar)
+    {
+        tid = omp_get_thread_num();
+        numt = omp_get_num_threads();
+        printf("hello world %d of %d: tvar = %d, A(tvar) = %x \n", tid, numt, +
+        +tvar, &tvar);
+    }
 }
