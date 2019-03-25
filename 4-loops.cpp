@@ -29,7 +29,7 @@ int main(){
     // int fac = 1;
     // #pragma omp parallel
     // {
-    //     int omp_priv = 1; /* This value comes from the table shown above */
+    //     int omp_priv = 1;
     //     #pragma omp for nowait
     //     for(int n=2; n<=number; ++n)
     //     omp_priv *= n;
@@ -69,7 +69,7 @@ int main(){
     fac = 1;
     start = omp_get_wtime();
     printf("static with smaller chunk size (default = 1)\n");
-    #pragma omp parallel for schedule(static, 1) reduction(*:fac)
+    #pragma omp parallel for schedule(static, 4) reduction(*:fac)
     for(int n=2; n<=10; ++n)
         fac *= n; // This operation is done atomically on shared variable
     printf("Fact 10 is %d, in seconds = %f\n", fac, omp_get_wtime() - start);

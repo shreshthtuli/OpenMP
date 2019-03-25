@@ -83,6 +83,15 @@ int main(){
     // but causes the value from the last task to be copied back to the original value after
     // the end of the loop/sections construct.
 
+    f = 0;
+    
+    // lastprivate copies values from  private to initial variabl only when all threads get same value
+    #pragma omp parallel for lastprivate(f) num_threads(2)
+    for(int i = 0; i < 1; i++){   
+        f += 1;
+    }
+    printf("Last private value : %d\n", f);
+
     #pragma omp threadprivate (tvar)
     int numt;
     tvar = 11;
@@ -102,5 +111,18 @@ int main(){
         numt = omp_get_num_threads();
         printf("hello world %d of %d: tvar = %d, A(tvar) = %x \n", tid, numt, +
         +tvar, &tvar);
+    }
+
+    #pragma omp parallel num_threads(2)
+    {
+        int num = omp_get_num_threads(); // Num threads in this parallel region
+        int tid = omp_get_thread_num();
+        printf("outer hello-world %d of %d\n", tid, num);
+        #pragma omp parallel num_threads(2)
+        {
+            int num = omp_get_num_threads(); // Num threads in this local parallel region
+            int tid = omp_get_thread_num();
+            printf("inner hello-world %d of %d\n", tid, num);
+        }
     }
 }

@@ -5,9 +5,9 @@
 int main(){
 
     int num, tid;
-    printf("Part 1 one thread does the job\n");
+    printf("Part 1 barrier\n");
     num = 0, tid = 0;
-    #pragma omp parallel private(tid) // Default is shared when declared outside parallel region
+    #pragma omp parallel private(tid) // Default is shared when declared outside parallel region and private when declared inside
     {
         tid = omp_get_thread_num();
         if(tid == 0) num = omp_get_num_threads();
@@ -45,7 +45,7 @@ int main(){
     #pragma omp parallel private(tid) // Default is shared when declared outside parallel region
     {
         tid = omp_get_thread_num();
-        #pragma omp single nowait// implicit barrier
+        #pragma omp single nowait// implicit barrier overridden
             num = omp_get_num_threads();
         printf("hello-world %d of %d\n", tid, num);
     } // Implicit barrier here
@@ -56,4 +56,15 @@ int main(){
     // of private (thread-local) variables are the same.
 
     // single with copyprivate(<var name>) broadcasts thread private var value to others
+
+    printf("Part 5 single with copyprivate(<var name>) broadcasts thread private var value to others\n");
+    num = 0, tid = 0;
+    #pragma omp parallel private(tid) // Default is shared when declared outside parallel region
+    {
+        tid = omp_get_thread_num();
+        #pragma omp single copyprivate(tid)// implicit barrier overridden
+            num = omp_get_num_threads();
+        printf("hello-world %d of %d\n", tid, num);
+    } // Implicit barrier here
+
 }
