@@ -84,7 +84,7 @@ int main(){
     #pragma omp parallel private(tid) // Default is shared when declared outside parallel region
     {
         tid = omp_get_thread_num();
-        #pragma omp single copyprivate(tid)// implicit barrier overridden
+        #pragma omp single copyprivate(tid)
             num = omp_get_num_threads();
         printf("hello-world %d of %d\n", tid, num);
     } // Implicit barrier here
